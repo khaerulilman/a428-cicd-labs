@@ -1,30 +1,42 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
+    agent any
+    
+    tools {
+        nodejs 'NodeJS'
     }
-    environment {
-        CI = 'true'
-    }
+    
     stages {
-        stage('Build') {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Install Dependencies') {
             steps {
                 sh 'npm install'
             }
         }
-        stage('Test') {
+        
+        stage('Build') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                sh 'npm run build'
             }
         }
-        stage('Deliver') {
+        
+        stage('Test') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the website? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
+                sh 'npm test -- --watchAll=false'
             }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline berhasil!'
+        }
+        failure {
+            echo 'Pipeline gagal!'
         }
     }
 }
