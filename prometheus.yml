@@ -1,13 +1,11 @@
-# Prometheus Configuration for Jenkins Pipeline Monitoring
-# Metrics path: /prom
-# Scrape interval: 10 seconds
-
 global:
-  scrape_interval: 10s # Collecting metrics every 10 seconds
+  scrape_interval: 10s
   evaluation_interval: 10s
 
 scrape_configs:
   - job_name: "jenkins"
-    metrics_path: "/prom" # Changed from default /prometheus to /prom
+    metrics_path: "/prom"
     static_configs:
-      - targets: ["jenkins:8080"] # Adjust hostname/port based on your setup
+      - targets: ["host.docker.internal:8080"]
+        labels:
+          instance: "jenkins-master"
