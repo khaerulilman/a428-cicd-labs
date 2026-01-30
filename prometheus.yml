@@ -8,6 +8,6 @@ global:
 
 scrape_configs:
   - job_name: "jenkins"
-    metrics_path: "/prometheus" # Changed from default /prometheus to /prom
+    metrics_path: "/prom" # Changed from default /prometheus to /prom
     static_configs:
       - targets: ["jenkins:8080"] # Adjust hostname/port based on your setup
