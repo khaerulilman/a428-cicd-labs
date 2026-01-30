@@ -29,6 +29,34 @@ pipeline {
                 sh 'npm test -- --watchAll=false'
             }
         }
+        
+        stage('Manual Approval') {
+            steps {
+                input message: 'Lanjutkan ke tahap Deploy?', ok: 'Proceed'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                sh '''
+                    npm run build
+                    npm start &
+                    echo $! > .pidfile
+                '''
+                echo 'Application deployed successfully!'
+                echo 'Visit http://localhost:3000 to see your React application in action.'
+                echo 'Application will run for 1 minute before automatically stopping...'
+                sleep 60
+                sh '''
+                    if [ -f .pidfile ]; then
+                        kill $(cat .pidfile) || true
+                        rm .pidfile
+                    fi
+                '''
+                echo 'Application stopped after 1 minute.'
+            }
+        }
     }
     
     post {
