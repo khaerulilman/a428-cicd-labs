@@ -10,4 +10,4 @@ scrape_configs:
   - job_name: "jenkins"
     metrics_path: "/prom" # Changed from default /prometheus to /prom
     static_configs:
-      - targets: ["jenkins:8080"] # Adjust hostname/port based on your setup
+      - targets: ["host.docker.internal:8080"] # For Docker Desktop on Windows/Mac
